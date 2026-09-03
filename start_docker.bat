@@ -27,9 +27,10 @@ echo   - Backend API:    http://localhost:8000/docs
 echo   - MinIO Storage:  http://localhost:9001 (auditor / auditor123)
 echo ===================================================
 echo.
-echo Opening Web Dashboard and MinIO Console in browser...
+echo Opening Web Dashboard, Backend API Docs, and MinIO Console in browser...
 timeout /t 3 >nul
 start http://localhost:3000
+start http://localhost:8000/docs
 start http://localhost:9001
 echo.
 echo To view real-time logs, run: docker compose logs -f

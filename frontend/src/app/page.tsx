@@ -20,10 +20,109 @@ import {
   CheckCircle2
 } from "lucide-react";
 
+const DEFAULT_SAMPLES: (SampleRepo & { stars?: number; primary_language?: string; expected_profile?: string })[] = [
+  {
+    id: "vulnerable-python-app",
+    name: "vulnerable-python-app",
+    owner: "sample",
+    alias: "vulnerable-python-app",
+    url: "https://github.com/sample/vulnerable-python-app",
+    description: "Intentionally vulnerable Flask web application with leaked AWS keys, SQL injection (CWE-89), command injection, bare excepts, and CVE-compromised dependencies.",
+    badge: "Security Deficits",
+    language: "Python",
+    tags: ["python", "flask", "cwe-89"],
+    stars: 1240,
+  },
+  {
+    id: "clean-modular-ts",
+    name: "clean-modular-ts",
+    owner: "sample",
+    alias: "clean-modular-ts",
+    url: "https://github.com/sample/clean-modular-ts",
+    description: "Production-grade modular TypeScript microservice with 100% unit tests, Zod validation, GitHub Actions CI, and clean architecture.",
+    badge: "Clean Architecture",
+    language: "TypeScript",
+    tags: ["typescript", "clean-architecture"],
+    stars: 3850,
+  },
+  {
+    id: "fastapi-framework",
+    name: "fastapi",
+    owner: "tiangolo",
+    alias: "fastapi",
+    url: "https://github.com/tiangolo/fastapi",
+    description: "High-performance, easy to learn, fast to code Python web framework for APIs based on standard Python type hints.",
+    badge: "⭐ 82k Stars",
+    language: "Python",
+    tags: ["python", "fastapi", "async"],
+    stars: 82400,
+  },
+  {
+    id: "shadcn-ui-library",
+    name: "shadcn-ui",
+    owner: "shadcn-ui",
+    alias: "shadcn-ui",
+    url: "https://github.com/shadcn-ui/ui",
+    description: "Beautifully designed, accessible components built with Radix UI and Tailwind CSS. The gold standard for modern React frontend architecture.",
+    badge: "⭐ 86k Stars",
+    language: "TypeScript",
+    tags: ["react", "tailwind", "ui"],
+    stars: 86500,
+  },
+  {
+    id: "express-framework",
+    name: "express",
+    owner: "expressjs",
+    alias: "express",
+    url: "https://github.com/expressjs/express",
+    description: "Fast, unopinionated, minimalist web framework for Node.js powering millions of backend microservices worldwide.",
+    badge: "⭐ 66k Stars",
+    language: "JavaScript",
+    tags: ["nodejs", "express", "backend"],
+    stars: 66200,
+  },
+  {
+    id: "microservices-go-backend",
+    name: "microservices-go-backend",
+    owner: "sample",
+    alias: "microservices-go-backend",
+    url: "https://github.com/sample/microservices-go-backend",
+    description: "Distributed event-driven Go microservices architecture with gRPC, Redis Pub/Sub, and PostgreSQL order state management.",
+    badge: "Distributed Go",
+    language: "Go",
+    tags: ["go", "grpc", "microservices"],
+    stars: 2410,
+  },
+  {
+    id: "ml-predictive-pipeline",
+    name: "ml-predictive-pipeline",
+    owner: "sample",
+    alias: "ml-predictive-pipeline",
+    url: "https://github.com/sample/ml-predictive-pipeline",
+    description: "End-to-end PyTorch deep learning training and inference pipeline with data preprocessing, scaling, and feature engineering.",
+    badge: "PyTorch / ML",
+    language: "Python",
+    tags: ["python", "pytorch", "ml"],
+    stars: 1670,
+  },
+  {
+    id: "missing-docs-deps",
+    name: "missing-docs-deps",
+    owner: "sample",
+    alias: "missing-docs-deps",
+    url: "https://github.com/sample/missing-docs-deps",
+    description: "Legacy Python backend with zero automated tests, missing README documentation, and outdated dependencies.",
+    badge: "Needs Docs/Tests",
+    language: "Python",
+    tags: ["python", "legacy"],
+    stars: 420,
+  },
+];
+
 export default function HomePage() {
   const router = useRouter();
   const [repoUrl, setRepoUrl] = useState("");
-  const [samples, setSamples] = useState<SampleRepo[]>([]);
+  const [samples, setSamples] = useState<SampleRepo[]>(DEFAULT_SAMPLES);
   const [preview, setPreview] = useState<RepoPreview | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [llmProvider, setLlmProvider] = useState("offline");
@@ -307,9 +406,16 @@ export default function HomePage() {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-blue-400 border border-slate-700">
-                    {s.badge}
+                    {s.badge || (s as any).expected_profile || "Sample"}
                   </span>
-                  <span className="text-[11px] font-mono text-slate-500">{s.language}</span>
+                  <div className="flex items-center gap-2">
+                    {Boolean((s as any).stars) && (
+                      <span className="text-[11px] font-semibold text-amber-400 flex items-center gap-0.5">
+                        ⭐ {((s as any).stars >= 1000 ? `${((s as any).stars / 1000).toFixed(0)}k` : (s as any).stars)}
+                      </span>
+                    )}
+                    <span className="text-[11px] font-mono text-slate-500">{s.language || (s as any).primary_language}</span>
+                  </div>
                 </div>
 
                 <h3 className="font-bold text-sm text-slate-100 group-hover:text-blue-400 transition-colors mb-1">

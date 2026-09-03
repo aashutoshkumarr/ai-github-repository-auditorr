@@ -1,0 +1,25 @@
+{
+  "name": "@shadcn/ui",
+  "version": "0.8.0",
+  "description": "Beautifully designed components that you can copy and paste into your apps.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint src/ --ext .ts,.tsx",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.439.0",
+    "tailwind-merge": "^2.5.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/react": "^18.3.3",
+    "jest": "^29.7.0",
+    "typescript": "^5.5.4"
+  }
+}

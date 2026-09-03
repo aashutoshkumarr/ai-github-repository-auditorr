@@ -182,8 +182,8 @@ export default function HomePage() {
     setLoadingStep(0);
 
     const interval = setInterval(() => {
-      setLoadingStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
-    }, 600);
+      setLoadingStep((prev) => (prev < steps.length - 2 ? prev + 1 : prev));
+    }, 400);
 
     try {
       const report = await analyzeRepository({
@@ -196,7 +196,7 @@ export default function HomePage() {
       setLoadingStep(steps.length - 1);
       setTimeout(() => {
         router.push(`/audit/${report.id}`);
-      }, 300);
+      }, 350);
     } catch (err: any) {
       clearInterval(interval);
       setIsLoading(false);

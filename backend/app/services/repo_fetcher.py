@@ -133,6 +133,21 @@ class RepoFetcher:
             ctx = RepositoryContext("https://github.com/sample/vulnerable-python-app", str(local_dir), "sample", "vulnerable-python-app")
             ctx.index_files()
             return ctx
+        elif "fastapi" in url_lower:
+            local_dir = BENCHMARKS_DIR / "repo_fastapi_python"
+            ctx = RepositoryContext("https://github.com/tiangolo/fastapi", str(local_dir), "tiangolo", "fastapi")
+            ctx.index_files()
+            return ctx
+        elif "shadcn" in url_lower or "shadcn-ui" in url_lower or "ui-library" in url_lower or url_lower.rstrip("/").endswith("/ui"):
+            local_dir = BENCHMARKS_DIR / "repo_shadcn_ui_ts"
+            ctx = RepositoryContext("https://github.com/shadcn-ui/ui", str(local_dir), "shadcn-ui", "ui")
+            ctx.index_files()
+            return ctx
+        elif "express" in url_lower:
+            local_dir = BENCHMARKS_DIR / "repo_express_js"
+            ctx = RepositoryContext("https://github.com/expressjs/express", str(local_dir), "expressjs", "express")
+            ctx.index_files()
+            return ctx
         elif "repo_clean_modular_ts" in url_lower or "clean-modular-ts" in url_lower or "sample/clean" in url_lower:
             local_dir = BENCHMARKS_DIR / "repo_clean_modular_ts"
             ctx = RepositoryContext("https://github.com/sample/clean-modular-ts", str(local_dir), "sample", "clean-modular-ts")
@@ -172,7 +187,8 @@ class RepoFetcher:
         
         loop = asyncio.get_event_loop()
         try:
-            clone_kwargs = {"depth": 50}
+            # Ultra-fast shallow single-branch clone
+            clone_kwargs = {"depth": 1, "single_branch": True}
             if branch:
                 clone_kwargs["branch"] = branch
                 

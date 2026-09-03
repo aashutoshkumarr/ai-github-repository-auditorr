@@ -1,0 +1,116 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: auditor-postgres
+    environment:
+      POSTGRES_USER: auditor
+      POSTGRES_PASSWORD: auditor
+      POSTGRES_DB: auditor
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: auditor-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:RELEASE.2024-06-13T22-53-53Z
+    container_name: auditor-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: auditor
+      MINIO_ROOT_PASSWORD: auditor123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: auditor-backend
+    command: python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    environment:
+      DEFAULT_LLM_PROVIDER: offline
+      DATABASE_URL: postgresql+asyncpg://auditor:auditor@postgres:5432/auditor
+      REDIS_URL: redis://redis:6379/0
+      STORAGE_BACKEND: s3
+      S3_ENDPOINT: http://minio:9000
+      AWS_ACCESS_KEY_ID: auditor
+      AWS_SECRET_ACCESS_KEY: auditor123
+      API_KEYS_RAW: "devkey:dev-tenant"
+    depends_on:
+      - postgres
+      - redis
+      - minio
+    volumes:
+      - auditor_storage:/app/storage
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: auditor-migrate
+    command: python -m backend.scripts.run_migrations upgrade head
+    environment:
+      DATABASE_URL: postgresql+asyncpg://auditor:auditor@postgres:5432/auditor
+      API_KEYS_RAW: "devkey:dev-tenant"
+    depends_on:
+      - postgres
+    restart: "no"
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: auditor-worker
+    command: python -m backend.app.services.worker
+    environment:
+      DEFAULT_LLM_PROVIDER: offline
+      DATABASE_URL: postgresql+asyncpg://auditor:auditor@postgres:5432/auditor
+      REDIS_URL: redis://redis:6379/0
+      STORAGE_BACKEND: s3
+      S3_ENDPOINT: http://minio:9000
+      AWS_ACCESS_KEY_ID: auditor
+      AWS_SECRET_ACCESS_KEY: auditor123
+      API_KEYS_RAW: "devkey:dev-tenant"
+    depends_on:
+      - postgres
+      - redis
+      - minio
+      - backend
+    volumes:
+      - auditor_storage:/app/storage
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: auditor-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:8000/api
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  auditor_storage:
+  postgres_data:
+  minio_data:

@@ -1,0 +1,4 @@
+requests==2.19.0
+urllib3==1.25.8
+paramiko==3.2.0
+flask==2.1.0

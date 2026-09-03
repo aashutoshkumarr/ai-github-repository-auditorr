@@ -1,0 +1,68 @@
+# ================================
+# Environment / Secrets
+# ================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+credentials/
+
+# ================================
+# Python
+# ================================
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ================================
+# Logs
+# ================================
+logs/
+*.log
+
+# ================================
+# Node / React
+# ================================
+node_modules/
+.next/
+out/
+dist/
+build/
+.npm/
+*.tsbuildinfo
+
+# ================================
+# IDE / OS
+# ================================
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ================================
+# Temporary files
+# ================================
+*.tmp
+*.temp
+*.bak
+
+# ================================
+# Docker local data
+# ================================
+postgres_data/
+redis_data/
+minio_data/
+
+# Runtime-cloned repository storage
+backend/storage/

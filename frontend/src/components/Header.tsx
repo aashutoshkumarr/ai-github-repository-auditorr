@@ -50,7 +50,7 @@ export default function Header() {
           </Link>
 
           <a
-            href="https://github.com/ashutoshranaa"
+            href="https://github.com/aashutoshkumarr/ai-github-repository-auditorr"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-xs font-semibold text-[var(--muted-fg)] hover:text-[var(--page-fg)] px-3 py-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--card-hover)] border border-[var(--border)] transition-all"

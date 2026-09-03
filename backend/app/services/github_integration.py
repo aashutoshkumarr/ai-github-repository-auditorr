@@ -171,8 +171,8 @@ class GitHubIntegration:
                 (
                     "*Reported automatically by "
                     "[AI GitHub Repository Auditor]"
-                    "(https://github.com/ashutoshranaa/"
-                    "ai-github-auditor)*"
+                    "(https://github.com/aashutoshkumarr/"
+                    "ai-github-repository-auditorr)*"
                 ),
             ]
         )

@@ -343,7 +343,7 @@ export default function AuditReportPage() {
       <SelfHealingPanel selfHealing={report.self_healing} />
 
       {/* Historical Repository Health Timeline */}
-      <HealthTimelineChart reportId={report.id} />
+      <HealthTimelineChart reportId={report.id} report={report} />
 
       {/* CI/CD DevSecOps Quality Gate */}
       <QualityGateCard reportId={report.id} />

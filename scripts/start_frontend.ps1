@@ -23,8 +23,11 @@ catch {
 }
 
 if ($portInUse) {
-    Write-Host "Frontend already running on http://localhost:$port"
-    exit 0
+    Write-Host "Releasing port $port to launch updated frontend..."
+    Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique | ForEach-Object {
+        Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue
+    }
+    Start-Sleep -Milliseconds 800
 }
 
 Write-Host "Starting Next.js frontend on http://localhost:$port"

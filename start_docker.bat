@@ -12,8 +12,15 @@ if errorlevel 1 (
     exit /b 1
 )
 
+echo Freeing ports 8000 and 3000 from local execution...
+powershell -NoProfile -Command "Get-NetTCPConnection -LocalPort 8000,3000 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique | ForEach-Object { Stop-Process -Id $PSItem -Force -ErrorAction SilentlyContinue }" >nul 2>&1
+timeout /t 1 /nobreak >nul
+
+echo Clearing any stale container name locks...
+docker rm -f auditor-minio auditor-redis auditor-postgres auditor-backend auditor-worker auditor-frontend >nul 2>&1
+
 echo [2/3] Spinning up container cluster with Docker Compose...
-docker compose up -d --build
+docker compose up -d
 
 echo.
 echo [3/3] Checking running services...

@@ -23,8 +23,11 @@ catch {
 }
 
 if ($portInUse) {
-    Write-Host "Backend already running on http://localhost:$port"
-    exit 0
+    Write-Host "Releasing port $port to launch updated backend..."
+    Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique | ForEach-Object {
+        Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue
+    }
+    Start-Sleep -Milliseconds 800
 }
 
 Write-Host "Starting FastAPI backend on http://localhost:$port"

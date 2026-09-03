@@ -8,6 +8,12 @@ Write-Host "=================================================="
 Write-Host "   AI GitHub Repository Auditor - Launching Platform"
 Write-Host "=================================================="
 
+Write-Host "Ensuring ports 8000 and 3000 are clean..."
+Get-NetTCPConnection -LocalPort 8000,3000 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique | ForEach-Object {
+    Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue
+}
+Start-Sleep -Milliseconds 800
+
 & $backendScript
 & $frontendScript
 

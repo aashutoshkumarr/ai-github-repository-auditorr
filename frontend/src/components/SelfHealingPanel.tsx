@@ -224,18 +224,31 @@ export default function SelfHealingPanel({
             Self-Healing Auditor
           </div>
 
-          <h2
-            className="
-              mt-3
-              text-xl
-              sm:text-2xl
-              font-extrabold
-              text-slate-50
-              leading-tight
-            "
-          >
-            Audit → Diagnose → Fix → Test → Verify
-          </h2>
+          <div className="mt-3 flex flex-wrap items-center gap-1.5 sm:gap-2">
+            {[
+              { name: "Audit", color: "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/30" },
+              { name: "Diagnose", color: "text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border-indigo-500/30" },
+              { name: "Fix", color: "text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/30" },
+              { name: "Test", color: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/30" },
+              {
+                name: "Verify",
+                color: isVerified
+                  ? "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30"
+                  : isFailed
+                  ? "text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/30"
+                  : "text-slate-600 dark:text-slate-400 bg-slate-500/10 border-slate-500/30",
+              },
+            ].map((step, idx) => (
+              <div key={step.name} className="flex items-center gap-1.5 sm:gap-2">
+                <span className={`px-2.5 py-1 rounded-lg text-xs sm:text-sm font-extrabold border ${step.color} shadow-sm backdrop-blur-sm`}>
+                  {step.name}
+                </span>
+                {idx < 4 && (
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600 shrink-0" />
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* =================================================== */}

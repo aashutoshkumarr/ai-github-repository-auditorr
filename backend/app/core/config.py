@@ -64,13 +64,14 @@ try:
 except Exception:
     settings.API_KEYS = {}
 
-# Build a safe DATABASE_URL variable for the rest of the app without mutating Settings
-_postgres_env = os.getenv('POSTGRES_URL') or os.getenv('DATABASE_URL') or settings.POSTGRES_URL
-if _postgres_env and _postgres_env.startswith('postgresql+psycopg'):
-    # convert common psycopg sync DSN form to asyncpg dialect
-    _postgres_env = _postgres_env.replace('postgresql+psycopg', 'postgresql+asyncpg')
-
-DATABASE_URL = os.getenv('DATABASE_URL') or _postgres_env or settings.DATABASE_URL
+# Build a safe DATABASE_URL variable: only use external PostgreSQL if explicitly configured in environment
+_env_db = os.getenv('DATABASE_URL') or os.getenv('POSTGRES_URL')
+if _env_db:
+    if _env_db.startswith('postgresql+psycopg'):
+        _env_db = _env_db.replace('postgresql+psycopg', 'postgresql+asyncpg')
+    DATABASE_URL = _env_db
+else:
+    DATABASE_URL = settings.DATABASE_URL
 
 # Backwards-compatible alias for callers using STORAGE_DIR from module
 STORAGE_DIR = STORAGE_DIR
